@@ -89,39 +89,55 @@ let showResult;
 let hideResult;
 
 function handleUserClick(event){
-    if(event.currentTarget)
-    userAttempts++;
-    //console.log(userAttempts);
-    if(userAttempts<=maxAttempts){
-        if(event.target.Id==='left-image'){
-            Product.allProducts[leftImageIndex].votes++
-        }else if(event.target.Id==='center-image'){
-            Product.allProducts[centerImageIndex].votes++
-        }else{
-            Product.allProducts[rightImageIndex].votes++
-        }
-        //console.log(Product.allProducts);
-        renderThreeImage();
-        console.log(userAttempts);
-    }
-    else{
-        leftImageElement.removeEventListener('click',handleUserClick);
-        centerImageElement.removeEventListener('click',handleUserClick);
-        rightImageElement.removeEventListener('click',handleUserClick);
+    if(event.currentTarget!==event.target){
+        userAttempts++;
 
-        }
-
-       
-    
-}
-function renderResultButton(){
+let userAttemptsElement=document.getElementById('container');
+  
+if (maxAttempts-userAttempts===0){
     let buttonElement=document.getElementById('button');
-let resultButton=document.createElement('button');
-buttonElement.appendChild(resultButton);
-resultButton.textContent='Result';
-    let productResult;
+    showResult=document.createElement('button');
+    buttonElement.appendChild(showResult);
+    showResult.textContent='Result';
 
+    hideResult=document.getElementById('button');
+    buttonElement.appendChild(hideResult);
+    hideResult.textContent='Hide';
+
+    showResult.addEventListener('click', renderShowResult);
+    hideResult.addEventListener('click', renderHideResult);
+}
+
+
+if (maxAttempts-userAttempts>=0){
+
+    userAttemptsElement.textContent=maxAttempts-userAttempts;
+}else{
+    userAttemptsElement.textContent=0;
+}
+
+if(userAttempts<=maxAttempts){
+            if(event.target.Id==='left-image'){
+                Product.allProducts[leftImageIndex].votes++
+            }else if(event.target.Id==='center-image'){
+                Product.allProducts[centerImageIndex].votes++
+            }else{
+                Product.allProducts[rightImageIndex].votes++
+            }
+            //console.log(Product.allProducts);
+            renderThreeImage();
+            //console.log(userAttempts);
+        }
+        else{
+           imageElement.removeEventListener('click',handleUserClick)
+    
+            }
+    }
+}
+function renderShowResult(){
     let list=document.getElementById('results-list');
+    let productResult;
+   
     for (let i=0; i< Product.allProducts; i++){
         productResult=document.createElement('li');
         list.appendChild(productResult);
@@ -130,13 +146,8 @@ resultButton.textContent='Result';
 
 }
 
+function renderHideResult(){
+    let list=document.getElementById('results-list');
+    list.textContent='';
+}
 
-
-
-        
-       
-        
-
-/*let Result= document.getElementById('container');
-let button=document.getElementById('btn');
-button.addEventListener('click',resultList);*/
