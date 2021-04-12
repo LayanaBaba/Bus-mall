@@ -124,9 +124,9 @@ if(userAttempts<=maxAttempts){
             }else{
                 Product.allProducts[rightImageIndex].votes++
             }
-            //console.log(Product.allProducts);
+            
             renderThreeImage();
-            //console.log(userAttempts);
+            
         }
         else{
            imageElement.removeEventListener('click',handleUserClick)
@@ -134,6 +134,8 @@ if(userAttempts<=maxAttempts){
             }
     }
 }
+
+
 function renderShowResult(){
     let list=document.getElementById('results-list');
     let productResult;
@@ -145,6 +147,8 @@ function renderShowResult(){
     }    
 
 }
+
+
 
 function renderHideResult(){
     let list=document.getElementById('results-list');
