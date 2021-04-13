@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+  }
+
+  #images-div{
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+
+
+#images-div img{
+    float: left;
+  width: 33.33%;
+  padding: 5px;
+}  
