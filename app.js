@@ -6,7 +6,7 @@ let leftImageElement=document.getElementById('left-image');
 let centerImageElement=document.getElementById('center-image');
 let rightImageElement=document.getElementById('right-image');
 
-let maxAttempts=10;
+let maxAttempts=25;
 let userAttempts=0;
 
 let leftImageIndex;
@@ -58,11 +58,7 @@ function renderThreeImage(){
     leftImageIndex=generatRandomIndex();
     centerImageIndex=generatRandomIndex();
     rightImageIndex=generatRandomIndex();
-    Product.allProducts[leftImageIndex].shown++
-    Product.allProducts[centerImageIndex].shown++
-    Product.allProducts[rightImageIndex].shown++
-
-
+    
     while(leftImageIndex===centerImageIndex||leftImageIndex===rightImageIndex||centerImageIndex===rightImageIndex){
         centerImageIndex=generatRandomIndex();
         rightImageIndex=generatRandomIndex();
@@ -75,10 +71,11 @@ function renderThreeImage(){
 
     leftImageElement.alt=Product.allProducts[leftImageIndex].name;
     centerImageElement.alt=Product.allProducts[centerImageIndex].name;
-    rightImageElement.alt=Product.allProducts[rightImageIndex].name;
-
-
-   
+    rightImageElement.alt=Product.allProducts[rightImageIndex].name; 
+    
+    Product.allProducts[leftImageIndex].shown++
+    Product.allProducts[centerImageIndex].shown++
+    Product.allProducts[rightImageIndex].shown++
 }
 renderThreeImage();
 
@@ -90,9 +87,9 @@ imageElement.addEventListener('click',handleUserClick);
 
 function handleUserClick(event){
    
-
+    userAttempts++;
 if(userAttempts<=maxAttempts){
-            userAttempts++;
+            
             if(event.target.Id==='left-image'){
                 Product.allProducts[leftImageIndex].votes++
             }else if(event.target.Id==='center-image'){
@@ -106,29 +103,25 @@ if(userAttempts<=maxAttempts){
             renderThreeImage();
             
         }else{
-            let list=document.getElementById('results-list');
             let button=document.getElementById('button');
-            imageElement.appendChild(button);
-            button.textContent='Show Result';
-            button.addEventListener=('click',renderShow);
+            button.addEventListener('click',renderShow);
             button.hidden=false;
 
-
-            function renderShow(){
-                let productResult;
-        
-                   for (let i=0; i< Product.allProducts; i++){
-                   productResult=document.createElement('li');
-                   list.appendChild(productResult);
-                   productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
-                   }    
-                   button.removeEventListener=('click',renderShow)
-            }
-            imageElement.removeEventListener=('click',handleUserClick)    
+            imageElement.removeEventListener('click',handleUserClick);   
         }        
    }
 
-   
+   function renderShow(){
+    let list=document.getElementById('results-list');
+    let productResult;
+
+       for (let i=0; i< Product.allProducts; i++){
+       productResult=document.createElement('li');
+       list.appendChild(productResult);
+       productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
+       }    
+       button.removeEventListener('click',renderShow);
+}
 
 
 
