@@ -6,20 +6,25 @@ let leftImageElement=document.getElementById('left-image');
 let centerImageElement=document.getElementById('center-image');
 let rightImageElement=document.getElementById('right-image');
 
-let maxAttempts=10;
+let maxAttempts=25;
 let userAttempts=0;
 
 let leftImageIndex;
 let centerImageIndex;
 let rightImageIndex;
 
-function Product(name,path,shown,votes){
+let nameArr=[];
+let votesArr=[];
+let showArr=[];
+
+function Product(name,path){
 this.name=name;
 this.path=path;
 this.shown=0;
 this.votes=0;
 
 Product.allProducts.push(this)
+nameArr.push(this.name);
 }
 
 Product.allProducts=[];
@@ -53,18 +58,27 @@ function generatRandomIndex(){
 }
 
 //console.log(generatRandomIndex());
+let storeArr=[];
 
 function renderThreeImage(){
     leftImageIndex=generatRandomIndex();
     centerImageIndex=generatRandomIndex();
     rightImageIndex=generatRandomIndex();
-    
-    while(leftImageIndex===centerImageIndex||leftImageIndex===rightImageIndex||centerImageIndex===rightImageIndex){
+
+   
+    while(leftImageIndex===centerImageIndex||leftImageIndex===rightImageIndex||centerImageIndex===rightImageIndex||storeArr.includes(leftImageIndex)||storeArr.includes(centerImageIndex)||storeArr.includes(rightImageIndex)){
+        leftImageIndex=generatRandomIndex();
         centerImageIndex=generatRandomIndex();
         rightImageIndex=generatRandomIndex();
         
     }
-//console.log(Product.allProducts[leftImageIndex.path]);
+    storeArr=[];
+    storeArr.push(leftImageIndex)
+    storeArr.push(centerImageIndex)
+    storeArr.push(rightImageIndex)
+    console.log(storeArr);
+ 
+
     leftImageElement.src=Product.allProducts[leftImageIndex].path;
     centerImageElement.src=Product.allProducts[centerImageIndex].path;
     rightImageElement.src=Product.allProducts[rightImageIndex].path;
@@ -73,9 +87,10 @@ function renderThreeImage(){
     centerImageElement.alt=Product.allProducts[centerImageIndex].name;
     rightImageElement.alt=Product.allProducts[rightImageIndex].name; 
     
-    Product.allProducts[leftImageIndex].shown++
-    Product.allProducts[centerImageIndex].shown++
-    Product.allProducts[rightImageIndex].shown++
+    Product.allProducts[leftImageIndex].shown++;
+    Product.allProducts[centerImageIndex].shown++;
+    Product.allProducts[rightImageIndex].shown++;
+    
 }
 renderThreeImage();
 
@@ -89,15 +104,18 @@ function handleUserClick(event){
    
     userAttempts++;
 if(userAttempts<=maxAttempts){
-            console.log(userAttempts,'first');
-            if(event.target.Id==='left-image'){
-                Product.allProducts[leftImageIndex].votes++
-            }else if(event.target.Id==='center-image'){
-                Product.allProducts[centerImageIndex].votes++
-            }else if(event.target.Id==='right-image'){
-                Product.allProducts[rightImageIndex].votes++
+            
+            if(event.target.id==='left-image'){
+                Product.allProducts[leftImageIndex].votes++;
+            }else if(event.target.id==='center-image'){
+                Product.allProducts[centerImageIndex].votes++;
+            }else if(event.target.id==='right-image'){
+                Product.allProducts[rightImageIndex].votes++;
+            }else{
+                console.log(userAttempts);
             }
-            console.log(userAttempts,'second');
+            
+            console.log(Product.allProducts[leftImageIndex].votes);
             renderThreeImage();
             
         }else{
@@ -107,6 +125,11 @@ if(userAttempts<=maxAttempts){
             button.addEventListener('click',renderShow);
             button.hidden=false;
           
+for (let i=0; i<Product.allProducts.length; i++){
+    votesArr.push(Product.allProducts[i].votes);
+    showArr.push(Product.allProducts[i].shown);
+}
+ chart ();
             imageElement.removeEventListener('click',handleUserClick);   
         }        
    }
@@ -117,7 +140,46 @@ if(userAttempts<=maxAttempts){
        for (let i=0; i< Product.allProducts.length; i++){
        productResult=document.createElement('li');
        list.appendChild(productResult);
-       productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
+       productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was seen ${Product.allProducts[i].shown} times.`;
        }    
        button.removeEventListener('click',renderShow);
 }
+function chart() {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    
+    let chart= new Chart(ctx,{
+      // what type is the chart
+     type: 'bar',
+  
+    //  the data for showing
+     data:{
+      //  for the names
+        labels: nameArr,
+        
+        datasets: [
+          {
+          label: 'Goats votes',
+          data: votesArr,
+          backgroundColor: [
+            'rgb(251, 93, 76)',
+          ],
+    
+          borderWidth: 1
+        },
+  
+        {
+          label: 'Goats shown',
+          data: showArr,
+          backgroundColor: [
+            'black',
+          ],
+    
+          borderWidth: 1
+        }
+        
+      ]
+      },
+      options: {}
+    });
+    
+  }
