@@ -58,11 +58,7 @@ function renderThreeImage(){
     leftImageIndex=generatRandomIndex();
     centerImageIndex=generatRandomIndex();
     rightImageIndex=generatRandomIndex();
-    Product.allProducts[leftImageIndex].shown++
-    Product.allProducts[centerImageIndex].shown++
-    Product.allProducts[rightImageIndex].shown++
-
-
+    
     while(leftImageIndex===centerImageIndex||leftImageIndex===rightImageIndex||centerImageIndex===rightImageIndex){
         centerImageIndex=generatRandomIndex();
         rightImageIndex=generatRandomIndex();
@@ -75,83 +71,57 @@ function renderThreeImage(){
 
     leftImageElement.alt=Product.allProducts[leftImageIndex].name;
     centerImageElement.alt=Product.allProducts[centerImageIndex].name;
-    rightImageElement.alt=Product.allProducts[rightImageIndex].name;
-
-
-   
+    rightImageElement.alt=Product.allProducts[rightImageIndex].name; 
+    
+    Product.allProducts[leftImageIndex].shown++
+    Product.allProducts[centerImageIndex].shown++
+    Product.allProducts[rightImageIndex].shown++
 }
 renderThreeImage();
 
 
 
 imageElement.addEventListener('click',handleUserClick);
-let showResult;
-let hideResult;
+
+
 
 function handleUserClick(event){
-    if(event.currentTarget!==event.target){
-        userAttempts++;
-
-let userAttemptsElement=document.getElementById('container');
-  
-if (maxAttempts-userAttempts===0){
-    let buttonElement=document.getElementById('button');
-    showResult=document.createElement('button');
-    buttonElement.appendChild(showResult);
-    showResult.textContent='Result';
-
-    hideResult=document.getElementById('button');
-    buttonElement.appendChild(hideResult);
-    hideResult.textContent='Hide';
-
-    showResult.addEventListener('click', renderShowResult);
-    hideResult.addEventListener('click', renderHideResult);
-}
-
-
-if (maxAttempts-userAttempts>=0){
-
-    userAttemptsElement.textContent=maxAttempts-userAttempts;
-}else{
-    userAttemptsElement.textContent=0;
-}
-
+   
+    userAttempts++;
 if(userAttempts<=maxAttempts){
+            
             if(event.target.Id==='left-image'){
                 Product.allProducts[leftImageIndex].votes++
             }else if(event.target.Id==='center-image'){
                 Product.allProducts[centerImageIndex].votes++
-            }else{
+            }else if(event.target.Id==='right-image'){
                 Product.allProducts[rightImageIndex].votes++
+            }else{
+                userAttempts--;
             }
             
             renderThreeImage();
             
-        }
-        else{
-           imageElement.removeEventListener('click',handleUserClick)
-    
-            }
-    }
-}
+        }else{
+            let button=document.getElementById('button');
+            button.addEventListener('click',renderShow);
+            button.hidden=false;
 
+            imageElement.removeEventListener('click',handleUserClick);   
+        }        
+   }
 
-function renderShowResult(){
+   function renderShow(){
     let list=document.getElementById('results-list');
     let productResult;
-   
-    for (let i=0; i< Product.allProducts; i++){
-        productResult=document.createElement('li');
-        list.appendChild(productResult);
-        productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
-    }    
 
+       for (let i=0; i< Product.allProducts; i++){
+       productResult=document.createElement('li');
+       list.appendChild(productResult);
+       productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
+       }    
+       button.removeEventListener('click',renderShow);
 }
 
 
-
-function renderHideResult(){
-    let list=document.getElementById('results-list');
-    list.textContent='';
-}
 
