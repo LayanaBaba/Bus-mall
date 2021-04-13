@@ -6,7 +6,7 @@ let leftImageElement=document.getElementById('left-image');
 let centerImageElement=document.getElementById('center-image');
 let rightImageElement=document.getElementById('right-image');
 
-let maxAttempts=25;
+let maxAttempts=10;
 let userAttempts=0;
 
 let leftImageIndex;
@@ -89,39 +89,35 @@ function handleUserClick(event){
    
     userAttempts++;
 if(userAttempts<=maxAttempts){
-            
+            console.log(userAttempts,'first');
             if(event.target.Id==='left-image'){
                 Product.allProducts[leftImageIndex].votes++
             }else if(event.target.Id==='center-image'){
                 Product.allProducts[centerImageIndex].votes++
             }else if(event.target.Id==='right-image'){
                 Product.allProducts[rightImageIndex].votes++
-            }else{
-                userAttempts--;
             }
-            
+            console.log(userAttempts,'second');
             renderThreeImage();
             
         }else{
+           
+            
             let button=document.getElementById('button');
             button.addEventListener('click',renderShow);
             button.hidden=false;
-
+          
             imageElement.removeEventListener('click',handleUserClick);   
         }        
    }
-
    function renderShow(){
     let list=document.getElementById('results-list');
     let productResult;
 
-       for (let i=0; i< Product.allProducts; i++){
+       for (let i=0; i< Product.allProducts.length; i++){
        productResult=document.createElement('li');
        list.appendChild(productResult);
        productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} and was seen ${Product.allProducts[i].shown} times.`;
        }    
        button.removeEventListener('click',renderShow);
 }
-
-
-
